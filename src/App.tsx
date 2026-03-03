@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { motion } from 'motion/react';
 import { Package, Truck, CheckCircle, Clock, AlertCircle, Search, Phone, ChevronRight, ArrowLeft, Home } from 'lucide-react';
 import { Order } from './types';
+import mockData from './data.json';
 
 // --- Components ---
 
@@ -144,16 +145,14 @@ function Dashboard({ phone, onLogout, onSelectOrder }: { phone: string; onLogout
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    fetch(`/api/orders?phone=${phone}`)
-      .then(res => res.json())
-      .then(data => {
-        setOrders(data);
-        setLoading(false);
-      })
-      .catch(err => {
-        console.error(err);
-        setLoading(false);
-      });
+    // Simulate network fetching from JSON
+    setLoading(true);
+    setTimeout(() => {
+      // Type assertion since imported JSON strings might not perfectly match string union types
+      const userOrders = mockData.orders.filter(order => order.recipient_phone === phone) as Order[];
+      setOrders(userOrders);
+      setLoading(false);
+    }, 500);
   }, [phone]);
 
   return (
@@ -208,32 +207,26 @@ function OrderDetails({ order, onBack }: { order: Order; onBack: () => void }) {
   const [submitting, setSubmitting] = useState(false);
   const [submitted, setSubmitted] = useState(false);
 
-  const handleSubmitComplaint = async (e: React.FormEvent) => {
+  const handleSubmitComplaint = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitting(true);
-    try {
-      const res = await fetch('/api/complaints', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          orderId: order.id,
-          type: complaintType,
-          description: complaintDesc
-        })
+    
+    // Simulate saving a complaint
+    setTimeout(() => {
+      console.log('Complaint saved:', {
+        orderId: order.id,
+        type: complaintType,
+        description: complaintDesc,
       });
-      if (res.ok) {
-        setSubmitted(true);
-        setTimeout(() => {
-          setShowComplaintForm(false);
-          setSubmitted(false);
-          setComplaintDesc('');
-        }, 2000);
-      }
-    } catch (err) {
-      console.error(err);
-    } finally {
+      
+      setSubmitted(true);
+      setTimeout(() => {
+        setShowComplaintForm(false);
+        setSubmitted(false);
+        setComplaintDesc('');
+      }, 2000);
       setSubmitting(false);
-    }
+    }, 800);
   };
 
   // Helper to determine step status
