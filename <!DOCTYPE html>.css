@@ -1,0 +1,1405 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Nha Kinhon - Production Platform Build Proposal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&amp;family=Inter+Tight:wght@600;700&amp;display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg-white: #ffffff;
+      --text-black: #111111;
+      --text-grey: #666666;
+      --border-light: #e8e8e8;
+      --border-dark: #111111;
+      
+      --status-pending-border: #f59e0b;
+      --status-pending-bg: #fffbeb;
+      --status-pending-text: #92400e;
+      
+      --status-verified-border: #1a7a4a;
+      --status-verified-bg: #f0faf4;
+      --status-verified-text: #1a7a4a;
+      
+      --status-rejected-border: #c0392b;
+      --status-rejected-bg: #fdf2f2;
+      --status-rejected-text: #c0392b;
+      
+      --status-aip-border: #1a5fa8;
+      --status-aip-bg: #f0f4fd;
+      --status-aip-text: #1a5fa8;
+      
+      --status-fullapp-border: #7c3aed;
+      --status-fullapp-bg: #f5f0ff;
+      --status-fullapp-text: #5b21b6;
+      
+      --status-overdue-border: #c07a1a;
+      --status-overdue-bg: #fef9ee;
+      --status-overdue-text: #c07a1a;
+    }
+
+    body {
+      background-color: #f4f4f5;
+      margin: 0;
+      padding: 40px 0;
+      font-family: 'Inter', sans-serif;
+      font-size: 14px;
+      line-height: 1.7;
+      color: var(--text-black);
+    }
+
+    h1, h2, h3, h4 {
+      font-family: 'Inter Tight', sans-serif;
+      margin-top: 0;
+    }
+
+    /* Page Setup */
+    .page {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 72px 60px;
+      background-color: var(--bg-white);
+      box-sizing: border-box;
+      position: relative;
+    }
+    
+    .page-break {
+      page-break-after: always;
+      height: 40px;
+      background: transparent;
+    }
+
+    /* Footer */
+    .pg-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 24px 60px;
+      box-sizing: border-box;
+      background-color: var(--bg-white);
+      border-top: 1px solid var(--border-light);
+    }
+    
+    .logo-horizontal {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+    .logo-horizontal img {
+      height: 24px;
+      width: auto;
+    }
+    .logo-horizontal span {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: 22px;
+      letter-spacing: 1px;
+      color: var(--text-black);
+    }
+
+    .logo-vertical {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 6px;
+    }
+    .logo-vertical img {
+      height: 32px;
+      width: auto;
+    }
+    .logo-vertical span {
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      font-size: 18px;
+      letter-spacing: 1px;
+      color: var(--text-black);
+    }
+
+    .pg-footer .logo-horizontal img {
+      height: 18px;
+      opacity: 0.6;
+    }
+    .pg-footer .logo-horizontal span {
+      font-size: 16px;
+      opacity: 0.6;
+    }
+
+    .pg-footer-text {
+      font-size: 11px;
+      color: #aaa;
+      line-height: 1.6;
+      text-align: right;
+    }
+
+    /* Cover Page */
+    .cover-meta-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 80px;
+    }
+    .cover-labels {
+      text-align: right;
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      color: var(--text-grey);
+    }
+    .cover-title {
+      font-size: 42px;
+      font-weight: 700;
+      line-height: 1.1;
+      margin-bottom: 16px;
+    }
+    .cover-subtitle {
+      font-size: 24px;
+      font-weight: 400;
+      color: var(--text-grey);
+      margin-bottom: 80px;
+    }
+    .metadata-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 32px 24px;
+      padding-bottom: 40px;
+      border-bottom: 2px solid var(--border-dark);
+    }
+    .meta-item label {
+      display: block;
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--text-grey);
+      margin-bottom: 4px;
+      letter-spacing: 0.5px;
+    }
+    .meta-item span {
+      font-weight: 600;
+      font-size: 13px;
+    }
+
+    /* Section Headers */
+    .section-header {
+      border-bottom: 1px solid var(--border-dark);
+      margin-bottom: 32px;
+      padding-bottom: 8px;
+    }
+    .section-header h2 {
+      font-size: 24px;
+      margin: 0;
+      display: flex;
+      align-items: center;
+    }
+    .sec-num {
+      font-size: 14px;
+      text-transform: uppercase;
+      color: var(--text-grey);
+      margin-right: 16px;
+      font-weight: 600;
+      letter-spacing: 1px;
+    }
+
+    /* Typography Elements */
+    blockquote {
+      margin: 32px 0;
+      padding: 16px 24px;
+      border-left: 3px solid var(--border-dark);
+      background-color: #f9f9f9;
+      font-style: italic;
+      color: #333;
+    }
+    
+    /* Tables */
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 24px 0;
+    }
+    th {
+      background-color: var(--border-dark);
+      color: var(--bg-white);
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      text-align: left;
+      padding: 10px 14px;
+    }
+    td {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border-light);
+      color: #333;
+      vertical-align: top;
+    }
+    tr:nth-child(even) {
+      background-color: rgba(0,0,0,0.015);
+    }
+    tr.total-row td {
+      background-color: var(--border-dark);
+      color: var(--bg-white);
+      font-weight: 600;
+    }
+    
+    /* Constrained Wrappers */
+    .table-wrapper-680 { max-width: 680px; margin: 32px 0; }
+    .wrapper-560 { max-width: 560px; margin: 32px 0; }
+
+    /* Badges */
+    .badge {
+      display: inline-block;
+      padding: 2px 8px;
+      font-size: 11px;
+      font-weight: 600;
+      border-radius: 4px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      border: 1px solid transparent;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    .badge-pending { border-color: var(--status-pending-border); background: var(--status-pending-bg); color: var(--status-pending-text); }
+    .badge-verified { border-color: var(--status-verified-border); background: var(--status-verified-bg); color: var(--status-verified-text); }
+    .badge-rejected { border-color: var(--status-rejected-border); background: var(--status-rejected-bg); color: var(--status-rejected-text); }
+    .badge-aip { border-color: var(--status-aip-border); background: var(--status-aip-bg); color: var(--status-aip-text); }
+
+    /* Three-Tier Visibility Boxes */
+    .tier-boxes {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin: 32px 0;
+    }
+    .tier-card {
+      padding: 16px;
+      background: #fdfdfd;
+      border: 1px solid #eee;
+    }
+    .tier-1 { border-left: 3px solid #1a7a4a; }
+    .tier-2 { border-left: 3px solid #c07a1a; }
+    .tier-3 { border-left: 3px solid #bbb; }
+    .tier-label { font-size: 10px; font-weight: 700; text-transform: uppercase; margin-bottom: 8px; }
+    .tier-1 .tier-label { color: #1a7a4a; }
+    .tier-2 .tier-label { color: #c07a1a; }
+    .tier-3 .tier-label { color: #888; }
+    .tier-title { font-weight: 600; margin-bottom: 4px; font-size: 13px; }
+    .tier-desc { font-size: 12px; color: var(--text-grey); line-height: 1.5; }
+
+    /* GTM Stacked List */
+    .gtm-list {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+    .gtm-row {
+      display: flex;
+      align-items: flex-start;
+      border-left: 3px solid var(--border-dark);
+      padding-left: 20px;
+      position: relative;
+    }
+    .gtm-circle {
+      width: 24px;
+      height: 24px;
+      background: var(--border-dark);
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 11px;
+      font-weight: bold;
+      position: absolute;
+      left: -14px;
+      top: 0;
+    }
+    .gtm-content { padding-top: 2px; }
+    .gtm-label { font-size: 10px; text-transform: uppercase; color: var(--text-grey); font-weight: 600; letter-spacing: 1px;}
+    .gtm-title { font-size: 16px; font-weight: 600; margin: 4px 0; }
+    .gtm-desc { font-size: 13px; color: #444; margin: 0; }
+
+    /* Next Steps */
+    .next-step-list {
+      display: flex;
+      flex-direction: column;
+      border-left: 2px solid #eee;
+      padding-left: 24px;
+      margin-left: 20px;
+    }
+    .next-step-item {
+      position: relative;
+      margin-bottom: 32px;
+    }
+    .next-step-num {
+      position: absolute;
+      left: -56px;
+      top: -8px;
+      font-size: 36px;
+      font-family: 'Inter Tight', sans-serif;
+      font-weight: 700;
+      color: #e0e0e0;
+      background: var(--bg-white);
+      padding: 0 4px;
+    }
+    .next-step-item h4 { margin: 0 0 8px 0; font-size: 16px; }
+    .next-step-item p { margin: 0; font-size: 13px; color: var(--text-grey); }
+
+    /* Diagrams */
+    .diagram {
+      border: 1px solid #ddd;
+      border-radius: 4px;
+      padding: 28px 24px;
+      margin: 32px 0;
+      background: #fafafa;
+    }
+    .diagram-title {
+      font-size: 11px;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      color: #888;
+      margin-bottom: 24px;
+      font-weight: 600;
+    }
+
+    /* Signing Grid */
+    .sign-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 60px;
+      margin-top: 40px;
+    }
+    .sign-party-label {
+      font-weight: 700;
+      margin-bottom: 4px;
+      font-size: 15px;
+    }
+    .sign-party-name {
+      color: var(--text-grey);
+      margin-bottom: 32px;
+      font-size: 13px;
+    }
+    .sign-field {
+      border-bottom: 1px solid var(--border-dark);
+      padding-top: 32px;
+      margin-bottom: 8px;
+    }
+    .sign-label {
+      font-size: 10px;
+      text-transform: uppercase;
+      color: var(--text-grey);
+      letter-spacing: 0.5px;
+    }
+    .sign-ref-bar {
+      margin-top: 80px;
+      padding-top: 16px;
+      border-top: 1px solid var(--border-light);
+      font-size: 11px;
+      color: var(--text-grey);
+      text-align: right;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="page">
+    <div class="cover-meta-top">
+      <div class="logo-horizontal">
+        <img src="https://nexeor.com/img/logo/nexeor-logo.png" alt="Nexeor Icon">
+        <span>NEXEOR</span>
+      </div>
+      <div class="cover-labels">
+        Proposal Ref: NK-2026-03<br>
+        Client: Bissau Express / Nha Kinhon<br>
+        Prepared By: Nexeor
+      </div>
+    </div>
+    
+    <div class="cover-title">Production Platform Build</div>
+    <div class="cover-subtitle">Nha Kinhon — Diaspora Provisions Delivery</div>
+    
+    <div class="metadata-grid">
+      <div class="meta-item">
+        <label>Client</label>
+        <span>Bissau Express</span>
+      </div>
+      <div class="meta-item">
+        <label>Prepared By</label>
+        <span>Nexeor · Dubai, UAE</span>
+      </div>
+      <div class="meta-item">
+        <label>Date</label>
+        <span>March 2026</span>
+      </div>
+      <div class="meta-item">
+        <label>Budget</label>
+        <span>$13,624 USD (Fixed)</span>
+      </div>
+      <div class="meta-item">
+        <label>Timeline</label>
+        <span>6 Months (12 Sprints)</span>
+      </div>
+      <div class="meta-item">
+        <label>Tech Stack</label>
+        <span>Flutter, Next.js, FastAPI</span>
+      </div>
+      <div class="meta-item">
+        <label>Validity</label>
+        <span>30 Days from Issue</span>
+      </div>
+      <div class="meta-item">
+        <label>Reference</label>
+        <span>NK-2026-03</span>
+      </div>
+    </div>
+  </div>
+  
+  <div class="pg-footer">
+    <div class="logo-horizontal">
+      <img src="https://nexeor.com/img/logo/nexeor-logo.png" alt="Nexeor Icon">
+      <span>NEXEOR</span>
+    </div>
+    <div class="pg-footer-text">Nexeor · Custom Software Development · Dubai, UAE<br>Ref: NK-2026-03</div>
+  </div>
+  <div class="page-break"></div>
+
+  <div class="page">
+    <div class="section-header">
+      <h2><span class="sec-num">01</span> Executive Summary & Value Proposition</h2>
+    </div>
+    <p>Nha Kinhon is a technology-first diaspora provisions delivery platform enabling UK-based Guinean expats to order food, hygiene products, and household essentials online and have them physically delivered to family members in Guinea-Bissau within 24 hours. The platform solves a deeply personal, unserved problem: the inability to guarantee that loved ones at home receive essential goods reliably, with full visibility and proof of delivery.</p>
+    
+    <p><strong>The Nha Kinhon Platform</strong> represents a shift from opaque remittance models to a guaranteed-goods ecosystem. Revenue is generated through a combination of product markup and a flat local delivery fee (£2.50) per order, creating sustainable unit economics from day one.</p>
+
+    <blockquote>
+      Unlike cash remittance — which offers no guarantee of how money is spent — Nha Kinhon gives the sender complete control and the recipient a tangible benefit.
+    </blockquote>
+    
+    <p><strong>Strategic Goal:</strong> To formalise Phases 1 & 2 via a production build that turns the existing validated prototype into a live, scalable, commercially operational platform connecting the UK corridor to Guinea-Bissau, culminating in public app store deployment.</p>
+
+    <div class="section-header" style="margin-top: 60px;">
+      <h2><span class="sec-num">02</span> Market Positioning</h2>
+    </div>
+    <p>The solution actively displaces high-friction informal couriers and high-ambiguity cash transfers. By controlling the entire chain from London payment to Bissau doorstep, trust is engineered into the product.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Platform Feature</th>
+          <th>Nha Kinhon</th>
+          <th>Cash Remittance</th>
+          <th>Informal Couriers</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Guaranteed Use of Funds (Goods)</td>
+          <td>✔ Yes</td>
+          <td>✖ No</td>
+          <td>✔ Yes</td>
+        </tr>
+        <tr>
+          <td>Real-Time Digital Tracking</td>
+          <td>✔ Yes</td>
+          <td>✔ Partial</td>
+          <td>✖ No</td>
+        </tr>
+        <tr>
+          <td>Geo-tagged Photo Proof of Delivery</td>
+          <td>✔ Yes</td>
+          <td>✖ No</td>
+          <td>✖ No</td>
+        </tr>
+        <tr>
+          <td>24-Hour Delivery SLA</td>
+          <td>✔ Yes</td>
+          <td>✔ Yes</td>
+          <td>✖ No (Weeks)</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <p>This positioning differentiates Nha Kinhon by combining the speed of digital remittance with the tangible outcomes of physical goods delivery, supported by high-fidelity technical validation.</p>
+  </div>
+  
+  <div class="pg-footer">
+    <div class="logo-horizontal">
+      <img src="https://nexeor.com/img/logo/nexeor-logo.png" alt="Nexeor Icon">
+      <span>NEXEOR</span>
+    </div>
+    <div class="pg-footer-text">Nexeor · Custom Software Development · Dubai, UAE<br>Ref: NK-2026-03</div>
+  </div>
+  <div class="page-break"></div>
+
+  <div class="page">
+    <div class="section-header">
+      <h2><span class="sec-num">03</span> Platform Overview</h2>
+    </div>
+    <p>Nha Kinhon is an integrated ecosystem of four purpose-built applications, each designed for a specific user type, connected through a shared production backend. Every order placed in London moves through each layer of the system until confirmed delivered in Bissau.</p>
+
+    <div class="diagram">
+      <div class="diagram-title">Platform Relationship Overview</div>
+      <svg viewBox="0 0 800 240" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow-grey" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#999" />
+          </marker>
+        </defs>
+        
+        <rect x="20" y="80" width="160" height="60" rx="4" fill="#f0f4fd" stroke="#1a5fa8" stroke-width="2"/>
+        <text x="100" y="110" style="fill: #1a5fa8; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;" text-anchor="middle">Customer App (UK)</text>
+        <text x="100" y="125" style="fill: #1a5fa8; font-family: 'Inter', sans-serif; font-size: 9px;" text-anchor="middle">Flutter (iOS & Android)</text>
+
+        <rect x="320" y="40" width="160" height="140" rx="4" fill="#111" stroke="#111" stroke-width="2"/>
+        <text x="400" y="80" style="fill: #fff; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;" text-anchor="middle">Production Backend</text>
+        <text x="400" y="110" style="fill: #fff; font-family: 'Inter', sans-serif; font-size: 9px;" text-anchor="middle">FastAPI + WebSockets</text>
+        <text x="400" y="130" style="fill: #fff; font-family: 'Inter', sans-serif; font-size: 9px;" text-anchor="middle">Ops Console (Next.js)</text>
+        <text x="400" y="150" style="fill: #fff; font-family: 'Inter', sans-serif; font-size: 9px;" text-anchor="middle">Inventory & Sourcing</text>
+
+        <rect x="620" y="40" width="160" height="60" rx="4" fill="#f0faf4" stroke="#1a7a4a" stroke-width="2"/>
+        <text x="700" y="70" style="fill: #1a7a4a; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;" text-anchor="middle">Agent App (Bissau)</text>
+        <text x="700" y="85" style="fill: #1a7a4a; font-family: 'Inter', sans-serif; font-size: 9px;" text-anchor="middle">Flutter (Offline-First)</text>
+
+        <rect x="620" y="120" width="160" height="60" rx="4" fill="#f5f5f5" stroke="#ccc" stroke-width="2"/>
+        <text x="700" y="150" style="fill: #333; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;" text-anchor="middle">Recipient App</text>
+        <text x="700" y="165" style="fill: #666; font-family: 'Inter', sans-serif; font-size: 9px;" text-anchor="middle">Flutter Tracker</text>
+
+        <line x1="180" y1="110" x2="310" y2="110" stroke="#999" stroke-width="1.2" marker-end="url(#arrow-grey)" />
+        <line x1="480" y1="70" x2="610" y2="70" stroke="#999" stroke-width="1.2" marker-end="url(#arrow-grey)" />
+        <line x1="480" y1="150" x2="610" y2="150" stroke="#999" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#arrow-grey)" />
+      </svg>
+    </div>
+
+    <p>This diagram illustrates the core dependency model. The platform runs a confirmed hybrid sourcing model where best-selling items are stocked in-house in Bissau for immediate fulfilment. Lower-velocity items are procured on-demand from local shops after an order is placed.</p>
+    <p>Importantly, the diagram maps Phase 1 & 2 capabilities. Multi-country expansion, third-party logistics integrations, and multi-currency (beyond GBP) do NOT exist in this deployment cycle.</p>
+
+    <div class="section-header" style="margin-top: 60px;">
+      <h2><span class="sec-num">04</span> User Roles & Permissions</h2>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Role</th>
+          <th>Access</th>
+          <th>Responsibility</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Admin</td>
+          <td>Full System</td>
+          <td>Global oversight, staff administration, expat CRM.</td>
+        </tr>
+        <tr>
+          <td>Accountant</td>
+          <td>Read-only Finance</td>
+          <td>Revenue tracking, payment reconciliation.</td>
+        </tr>
+        <tr>
+          <td>Warehouse Manager</td>
+          <td>Inventory Only</td>
+          <td>Stock tracking, bundle building, procurement flags.</td>
+        </tr>
+        <tr>
+          <td>Logistics Lead</td>
+          <td>Fulfilment & Dispatch</td>
+          <td>Driver assignment, POD review, geo-fraud detection.</td>
+        </tr>
+        <tr>
+          <td>Agent</td>
+          <td>Agent App Only</td>
+          <td>Last-mile delivery, capturing geo-tagged POD, offline sync.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="pg-footer">
+    <div class="logo-horizontal">
+      <img src="https://nexeor.com/img/logo/nexeor-logo.png" alt="Nexeor Icon">
+      <span>NEXEOR</span>
+    </div>
+    <div class="pg-footer-text">Nexeor · Custom Software Development · Dubai, UAE<br>Ref: NK-2026-03</div>
+  </div>
+  <div class="page-break"></div>
+
+  <div class="page">
+    <div class="section-header">
+      <h2><span class="sec-num">05</span> Detailed Portal Workflows</h2>
+    </div>
+
+    <h3>Customer App Workflow</h3>
+    <p>The Customer App is the primary revenue-generating surface. UK-based expats discover products, manage recipients, and complete purchases. The design must build immediate trust with a diaspora audience that has been let down by informal systems — transparent pricing, reliable tracking, and photo proof of delivery are therefore core to every screen.</p>
+    <p>Users navigate a deliberately two-step checkout to reduce abandonment. They assign a recipient by a unique TRK-XXXX ID, review the itemised order (subtotal + £2.50 local delivery fee), and pay securely via Stripe.</p>
+    <p>Upon payment, the order is generated in the production backend instantly, and live tracking begins via a visual progress bar indicating state shifts across the ecosystem.</p>
+
+    <div class="diagram">
+      <div class="diagram-title">Customer App Workflow</div>
+      <svg viewBox="0 0 800 120" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow-blue" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#1a5fa8" />
+          </marker>
+        </defs>
+        <rect x="20" y="30" width="140" height="50" rx="4" fill="#f0f4fd" stroke="#1a5fa8"/>
+        <text x="90" y="58" style="fill: #1a5fa8; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">Browse & Select</text>
+        
+        <rect x="220" y="30" width="140" height="50" rx="4" fill="#f0f4fd" stroke="#1a5fa8"/>
+        <text x="290" y="58" style="fill: #1a5fa8; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">Assign Recipient</text>
+        
+        <rect x="420" y="30" width="140" height="50" rx="4" fill="#f0f4fd" stroke="#1a5fa8"/>
+        <text x="490" y="58" style="fill: #1a5fa8; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">Stripe Checkout</text>
+
+        <rect x="620" y="30" width="140" height="50" rx="4" fill="#f0f4fd" stroke="#1a5fa8"/>
+        <text x="690" y="58" style="fill: #1a5fa8; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">Live Order Track</text>
+
+        <line x1="160" y1="55" x2="210" y2="55" stroke="#1a5fa8" stroke-width="1.2" marker-end="url(#arrow-blue)" />
+        <line x1="360" y1="55" x2="410" y2="55" stroke="#1a5fa8" stroke-width="1.2" marker-end="url(#arrow-blue)" />
+        <line x1="560" y1="55" x2="610" y2="55" stroke="#1a5fa8" stroke-width="1.2" marker-end="url(#arrow-blue)" />
+      </svg>
+    </div>
+
+    <p>This flow relies heavily on the FastAPI backend returning accurate real-time statuses. When an order transitions to 'Delivered', the app immediately pulls the Proof of Delivery data, showcasing the photo, GPS coordinates, and delivery timestamp directly to the customer.</p>
+    
+    <div style="margin: 16px 0;">
+      <span class="badge badge-pending">Processing</span>
+      <span class="badge badge-aip">In Transit</span>
+      <span class="badge badge-verified">Delivered</span>
+      <span class="badge badge-rejected">Disputed</span>
+    </div>
+
+    <ul>
+      <li>Biometric login (Face ID / Fingerprint) and guided first-launch walkthrough.</li>
+      <li>Category quick-links for Value Bundles, Pantry Staples, Hygiene, and Drinks.</li>
+      <li>Recipient directory showing TRK-XXXX ID, total orders sent, and total spend per person.</li>
+      <li>Dispute Delivery module allowing issue logging directly to the Admin Console.</li>
+    </ul>
+
+    <hr style="border: 0; border-top: 1px solid var(--border-light); margin: 40px 0;">
+
+    <h3>Agent App Workflow</h3>
+    <p>The operational nerve centre for last-mile delivery in Guinea-Bissau. Built to work reliably in real-world Bissau field conditions — including absent mobile data.</p>
+    <p>Every feature prioritises agent speed and simplicity. Offline mode is a core reliability requirement, not an edge case. Full data caching ensures assigned orders and manifests are available locally in the Flutter app. Action queues handle delivery confirmations captured when offline, auto-syncing the moment connectivity is restored.</p>
+    <p>For proof of delivery, the system excludes OTPs intentionally. Instead, the agent captures a photograph of the goods at the location; GPS coordinates are auto-captured at the moment of photo submission — the agent cannot manually enter a location.</p>
+
+    <div class="diagram">
+      <div class="diagram-title">Agent App Flow</div>
+      <svg viewBox="0 0 800 120" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow-green" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#1a7a4a" />
+          </marker>
+        </defs>
+        <rect x="20" y="30" width="140" height="50" rx="4" fill="#f0faf4" stroke="#1a7a4a"/>
+        <text x="90" y="58" style="fill: #1a7a4a; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">Receive Order</text>
+        
+        <rect x="220" y="30" width="140" height="50" rx="4" fill="#f0faf4" stroke="#1a7a4a"/>
+        <text x="290" y="58" style="fill: #1a7a4a; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">Navigate (Offline)</text>
+        
+        <rect x="420" y="30" width="140" height="50" rx="4" fill="#f0faf4" stroke="#1a7a4a"/>
+        <text x="490" y="58" style="fill: #1a7a4a; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">Capture POD + GPS</text>
+
+        <rect x="620" y="30" width="140" height="50" rx="4" fill="#f0faf4" stroke="#1a7a4a"/>
+        <text x="690" y="58" style="fill: #1a7a4a; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">Queue / Auto-Sync</text>
+
+        <line x1="160" y1="55" x2="210" y2="55" stroke="#1a7a4a" stroke-width="1.2" marker-end="url(#arrow-green)" />
+        <line x1="360" y1="55" x2="410" y2="55" stroke="#1a7a4a" stroke-width="1.2" marker-end="url(#arrow-green)" />
+        <line x1="560" y1="55" x2="610" y2="55" stroke="#1a7a4a" stroke-width="1.2" marker-end="url(#arrow-green)" />
+        
+        <rect x="440" y="10" width="100" height="16" rx="2" fill="#1a7a4a" />
+        <text x="490" y="22" style="fill: #fff; font-family: 'Inter', sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">Trust-Verified</text>
+      </svg>
+    </div>
+
+    <p>Once synced, the geo-tagged POD is immediately visible in the Admin Console for geo-fraud cross-check, and all four apps update to 'Delivered' simultaneously. This creates a robust, tamper-evident audit trail for every completed delivery.</p>
+
+    <div style="margin: 16px 0;">
+      <span class="badge badge-pending">Sync Pending</span>
+      <span class="badge badge-verified">Delivered</span>
+      <span class="badge badge-rejected">Failed Route</span>
+    </div>
+
+    <ul>
+      <li>Continuous network monitoring and offline action queueing via local caching.</li>
+      <li>Smart-sorted order list keeping the most urgent assigned or in-transit tasks visible.</li>
+      <li>One-tap Call and WhatsApp buttons alongside landmark notes.</li>
+      <li>Standardised failure reporting (Recipient Not Available, Wrong Address, Refused).</li>
+    </ul>
+
+  </div>
+
+  <div class="pg-footer">
+    <div class="logo-horizontal">
+      <img src="https://nexeor.com/img/logo/nexeor-logo.png" alt="Nexeor Icon">
+      <span>NEXEOR</span>
+    </div>
+    <div class="pg-footer-text">Nexeor · Custom Software Development · Dubai, UAE<br>Ref: NK-2026-03</div>
+  </div>
+  <div class="page-break"></div>
+
+  <div class="page">
+    <div class="section-header">
+      <h2><span class="sec-num">06</span> Technical Architecture</h2>
+    </div>
+    <p>The recommended stack is selected for cross-platform mobile reach, production-grade reliability, and cost-efficient scalability — appropriate for an early-stage platform that needs to launch quickly but be built to grow.</p>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Layer</th>
+          <th>Technology</th>
+          <th>Rationale</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Mobile Apps (Cust, Rec, Agt)</td>
+          <td>Flutter</td>
+          <td>Single codebase for iOS and Android; highly performant UI and smooth animations.</td>
+        </tr>
+        <tr>
+          <td>Operations Console</td>
+          <td>Next.js</td>
+          <td>Desktop-first SSR web framework for robust operational views and SEO.</td>
+        </tr>
+        <tr>
+          <td>Backend / API</td>
+          <td>FastAPI (Python)</td>
+          <td>High-performance API layer with automatic OpenAPI documentation.</td>
+        </tr>
+        <tr>
+          <td>Database</td>
+          <td>PostgreSQL</td>
+          <td>ACID compliance for payment and order records; proven at scale.</td>
+        </tr>
+        <tr>
+          <td>Real-time Sync</td>
+          <td>Redis + WebSockets</td>
+          <td>Session caching; real-time order status sync across all four apps simultaneously.</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <div class="diagram">
+      <div class="diagram-title">System Architecture</div>
+      <svg viewBox="0 0 800 280" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <marker id="arrow-dark" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6" markerHeight="6" orient="auto">
+            <path d="M 0 0 L 10 5 L 0 10 z" fill="#111" />
+          </marker>
+        </defs>
+        
+        <rect x="50" y="30" width="120" height="40" rx="4" fill="#fff" stroke="#999"/>
+        <text x="110" y="54" style="fill: #111; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">Customer App</text>
+        
+        <rect x="220" y="30" width="120" height="40" rx="4" fill="#fff" stroke="#999"/>
+        <text x="280" y="54" style="fill: #111; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">Recipient App</text>
+        
+        <rect x="460" y="30" width="120" height="40" rx="4" fill="#fff" stroke="#999"/>
+        <text x="520" y="54" style="fill: #111; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">Agent App</text>
+        
+        <rect x="630" y="30" width="120" height="40" rx="4" fill="#fff" stroke="#999"/>
+        <text x="690" y="54" style="fill: #111; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">Admin Console</text>
+
+        <rect x="220" y="120" width="360" height="50" rx="4" fill="#111" stroke="#111"/>
+        <text x="400" y="145" style="fill: #fff; font-family: 'Inter', sans-serif; font-size: 11px; font-weight: 600;" text-anchor="middle">FastAPI (Python) REST + WebSocket Layer</text>
+        <text x="400" y="160" style="fill: #fff; font-family: 'Inter', sans-serif; font-size: 9.5px;" text-anchor="middle">JWT Auth | Stripe Webhooks | Real-time Broadcast</text>
+
+        <rect x="180" y="210" width="140" height="40" rx="4" fill="#f5f5f5" stroke="#ccc"/>
+        <text x="250" y="234" style="fill: #333; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">PostgreSQL DB</text>
+
+        <rect x="340" y="210" width="120" height="40" rx="4" fill="#fdf2f2" stroke="#c0392b"/>
+        <text x="400" y="234" style="fill: #c0392b; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">Redis Cache</text>
+
+        <rect x="480" y="210" width="140" height="40" rx="4" fill="#fef9ee" stroke="#c07a1a"/>
+        <text x="550" y="234" style="fill: #c07a1a; font-family: 'Inter', sans-serif; font-size: 11px;" text-anchor="middle">AWS S3 (POD Photos)</text>
+
+        <line x1="110" y1="70" x2="300" y2="120" stroke="#999" stroke-width="1.2" marker-end="url(#arrow-dark)" />
+        <line x1="280" y1="70" x2="350" y2="120" stroke="#999" stroke-width="1.2" marker-end="url(#arrow-dark)" />
+        <line x1="520" y1="70" x2="450" y2="120" stroke="#999" stroke-width="1.2" marker-end="url(#arrow-dark)" />
+        <line x1="690" y1="70" x2="500" y2="120" stroke="#999" stroke-width="1.2" marker-end="url(#arrow-dark)" />
+
+        <line x1="300" y1="170" x2="250" y2="210" stroke="#999" stroke-width="1.2" marker-end="url(#arrow-dark)" />
+        <line x1="400" y1="170" x2="400" y2="210" stroke="#999" stroke-width="1.2" marker-end="url(#arrow-dark)" />
+        <line x1="500" y1="170" x2="550" y2="210" stroke="#999" stroke-width="1.2" marker-end="url(#arrow-dark)" />
+      </svg>
+    </div>
+
+    <div class="section-header" style="margin-top: 60px;">
+      <h2><span class="sec-num">07</span> Delivery Timeline</h2>
+    </div>
+    <p>Nexeor follows Agile Scrum, working in structured two-week sprints. The total timeline comprises 12 sprints across 6 months, mapping the transition from design research to full application suite rollout and hypercare deployment.</p>
+
+    <div class="diagram">
+      <div class="diagram-title">Comprehensive 6-Month Sprint Allocation</div>
+      <svg viewBox="0 0 784 420" width="100%" xmlns="http://www.w3.org/2000/svg">
+        <rect x="120" y="20" width="664" height="35" fill="#f9f9f9" />
+        <rect x="120" y="55" width="664" height="35" fill="#ffffff" />
+        <rect x="120" y="90" width="664" height="35" fill="#f9f9f9" />
+        <rect x="120" y="125" width="664" height="35" fill="#ffffff" />
+        <rect x="120" y="160" width="664" height="35" fill="#f9f9f9" />
+        <rect x="120" y="195" width="664" height="35" fill="#ffffff" />
+        <rect x="120" y="230" width="664" height="35" fill="#f9f9f9" />
+        <rect x="120" y="265" width="664" height="35" fill="#ffffff" />
+        <rect x="120" y="300" width="664" height="35" fill="#f9f9f9" />
+        <rect x="120" y="335" width="664" height="35" fill="#ffffff" />
+        <rect x="120" y="370" width="664" height="35" fill="#f9f9f9" />
+
+        <line x1="175" y1="0" x2="175" y2="405" stroke="#e4e4e4" />
+        <line x1="230" y1="0" x2="230" y2="405" stroke="#e4e4e4" />
+        <line x1="285" y1="0" x2="285" y2="405" stroke="#e4e4e4" />
+        <line x1="340" y1="0" x2="340" y2="405" stroke="#e4e4e4" />
+        <line x1="395" y1="0" x2="395" y2="405" stroke="#e4e4e4" />
+        <line x1="450" y1="0" x2="450" y2="405" stroke="#e4e4e4" />
+        <line x1="505" y1="0" x2="505" y2="405" stroke="#e4e4e4" />
+        <line x1="560" y1="0" x2="560" y2="405" stroke="#e4e4e4" />
+        <line x1="615" y1="0" x2="615" y2="405" stroke="#e4e4e4" />
+        <line x1="670" y1="0" x2="670" y2="405" stroke="#e4e4e4" />
+        <line x1="725" y1="0" x2="725" y2="405" stroke="#e4e4e4" />
+
+        <rect x="120" y="0" width="664" height="20" fill="#444" />
+        <text x="147.5" y="14" style="fill: #fff; font-family: Inter, sans-serif; font-size: 9px; font-weight: 700;" text-anchor="middle">S1</text>
+        <text x="202.5" y="14" style="fill: #fff; font-family: Inter, sans-serif; font-size: 9px; font-weight: 700;" text-anchor="middle">S2</text>
+        <text x="257.5" y="14" style="fill: #fff; font-family: Inter, sans-serif; font-size: 9px; font-weight: 700;" text-anchor="middle">S3</text>
+        <text x="312.5" y="14" style="fill: #fff; font-family: Inter, sans-serif; font-size: 9px; font-weight: 700;" text-anchor="middle">S4</text>
+        <text x="367.5" y="14" style="fill: #fff; font-family: Inter, sans-serif; font-size: 9px; font-weight: 700;" text-anchor="middle">S5</text>
+        <text x="422.5" y="14" style="fill: #fff; font-family: Inter, sans-serif; font-size: 9px; font-weight: 700;" text-anchor="middle">S6</text>
+        <text x="477.5" y="14" style="fill: #fff; font-family: Inter, sans-serif; font-size: 9px; font-weight: 700;" text-anchor="middle">S7</text>
+        <text x="532.5" y="14" style="fill: #fff; font-family: Inter, sans-serif; font-size: 9px; font-weight: 700;" text-anchor="middle">S8</text>
+        <text x="587.5" y="14" style="fill: #fff; font-family: Inter, sans-serif; font-size: 9px; font-weight: 700;" text-anchor="middle">S9</text>
+        <text x="642.5" y="14" style="fill: #fff; font-family: Inter, sans-serif; font-size: 9px; font-weight: 700;" text-anchor="middle">S10</text>
+        <text x="697.5" y="14" style="fill: #fff; font-family: Inter, sans-serif; font-size: 9px; font-weight: 700;" text-anchor="middle">S11</text>
+        <text x="752.5" y="14" style="fill: #fff; font-family: Inter, sans-serif; font-size: 9px; font-weight: 700;" text-anchor="middle">S12</text>
+
+        <text x="110" y="42" style="fill: #111; font-family: Inter, sans-serif; font-size: 11px; font-weight: 600;" text-anchor="end">UX/UI Design</text>
+        <text x="110" y="77" style="fill: #111; font-family: Inter, sans-serif; font-size: 11px; font-weight: 600;" text-anchor="end">FastAPI Backend</text>
+        <text x="110" y="112" style="fill: #111; font-family: Inter, sans-serif; font-size: 11px; font-weight: 600;" text-anchor="end">DB & Infrastructure</text>
+        <text x="110" y="147" style="fill: #111; font-family: Inter, sans-serif; font-size: 11px; font-weight: 600;" text-anchor="end">Customer App</text>
+        <text x="110" y="182" style="fill: #111; font-family: Inter, sans-serif; font-size: 11px; font-weight: 600;" text-anchor="end">Recipient App</text>
+        <text x="110" y="217" style="fill: #111; font-family: Inter, sans-serif; font-size: 11px; font-weight: 600;" text-anchor="end">Agent App</text>
+        <text x="110" y="252" style="fill: #111; font-family: Inter, sans-serif; font-size: 11px; font-weight: 600;" text-anchor="end">Ops Console</text>
+        <text x="110" y="287" style="fill: #111; font-family: Inter, sans-serif; font-size: 11px; font-weight: 600;" text-anchor="end">Stripe & Auth</text>
+        <text x="110" y="322" style="fill: #111; font-family: Inter, sans-serif; font-size: 11px; font-weight: 600;" text-anchor="end">UAT & QA Tests</text>
+        <text x="110" y="357" style="fill: #111; font-family: Inter, sans-serif; font-size: 11px; font-weight: 600;" text-anchor="end">App Store Auth</text>
+        <text x="110" y="392" style="fill: #111; font-family: Inter, sans-serif; font-size: 11px; font-weight: 600;" text-anchor="end">Go-Live Support</text>
+
+        <rect x="124" y="28" width="102" height="18" rx="2" fill="#e8e8e8" stroke="#555" />
+        <text x="175" y="40" style="fill: #111; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">Prototyping & UX Flow</text>
+
+        <rect x="234" y="63" width="157" height="18" rx="2" fill="#c8edd8" stroke="#1a7a4a" />
+        <text x="312.5" y="75" style="fill: #0a3d20; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">FastAPI Endpoints & Routing</text>
+
+        <rect x="234" y="98" width="102" height="18" rx="2" fill="#c8edd8" stroke="#1a7a4a" />
+        <text x="285" y="110" style="fill: #0a3d20; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">PostgreSQL Schema</text>
+
+        <rect x="289" y="133" width="102" height="18" rx="2" fill="#cce0f5" stroke="#1a5fa8" />
+        <text x="340" y="145" style="fill: #0d3a6e; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">Flutter Core & Logic</text>
+
+        <rect x="399" y="168" width="47" height="18" rx="2" fill="#e4d9ff" stroke="#7c3aed" />
+        <text x="422.5" y="180" style="fill: #3d1a7a; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">Tracker</text>
+
+        <rect x="399" y="203" width="102" height="18" rx="2" fill="#cce0f5" stroke="#1a5fa8" />
+        <text x="450" y="215" style="fill: #0d3a6e; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">Offline Sync & POD</text>
+
+        <rect x="509" y="238" width="102" height="18" rx="2" fill="#e8e8e8" stroke="#555" />
+        <text x="560" y="250" style="fill: #111; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">Next.js Operations Web</text>
+
+        <rect x="454" y="273" width="102" height="18" rx="2" fill="#fdf2f2" stroke="#c0392b" />
+        <text x="505" y="285" style="fill: #c0392b; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">Payments + JWT Auth</text>
+
+        <rect x="619" y="308" width="102" height="18" rx="2" fill="#fef9ee" stroke="#c07a1a" />
+        <text x="670" y="320" style="fill: #c07a1a; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">Beta Groups & Bug Bash</text>
+
+        <rect x="674" y="343" width="47" height="18" rx="2" fill="#e8e8e8" stroke="#555" />
+        <text x="697.5" y="355" style="fill: #111; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">Store Reg</text>
+
+        <rect x="729" y="378" width="47" height="18" rx="2" fill="#c8edd8" stroke="#1a7a4a" />
+        <text x="752.5" y="390" style="fill: #0a3d20; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">Hypercare</text>
+
+        <line x1="230" y1="20" x2="230" y2="405" stroke="#c07a1a" stroke-dasharray="4,4" />
+        <polygon points="230,405 226,398 234,398" fill="#c07a1a" />
+        <text x="230" y="417" style="fill: #c07a1a; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">M2 Design Apprv.</text>
+
+        <line x1="395" y1="20" x2="395" y2="405" stroke="#c07a1a" stroke-dasharray="4,4" />
+        <polygon points="395,405 391,398 399,398" fill="#c07a1a" />
+        <text x="395" y="417" style="fill: #c07a1a; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">M3 Cust App Done</text>
+        
+        <line x1="615" y1="20" x2="615" y2="405" stroke="#c07a1a" stroke-dasharray="4,4" />
+        <polygon points="615,405 611,398 619,398" fill="#c07a1a" />
+        <text x="615" y="417" style="fill: #c07a1a; font-family: Inter, sans-serif; font-size: 9px; font-weight: 600;" text-anchor="middle">M6 Console Ready</text>
+      </svg>
+    </div>
+  </div>
+
+  <div class="pg-footer">
+    <div class="logo-horizontal">
+      <img src="https://nexeor.com/img/logo/nexeor-logo.png" alt="Nexeor Icon">
+      <span>NEXEOR</span>
+    </div>
+    <div class="pg-footer-text">Nexeor · Custom Software Development · Dubai, UAE<br>Ref: NK-2026-03</div>
+  </div>
+  <div class="page-break"></div>
+
+  <div class="page">
+    <div class="section-header">
+      <h2><span class="sec-num">08</span> Quality Assurance & UAT Lifecycle</h2>
+    </div>
+    <p>Deploying an ecosystem of four connected applications across two continents requires rigorous validation. Quality Assurance is not left to the end of the project; it is built into our Agile sprint cycles from day one.</p>
+
+    <div class="tier-boxes">
+      <div class="tier-card tier-1">
+        <div class="tier-label">Sprints 1-2</div>
+        <div class="tier-title">Design Testing & Prototyping</div>
+        <div class="tier-desc">Interactive, high-fidelity Figma prototypes allow Bissau Express stakeholders to click through the exact user journeys of all apps to validate the UX/UI logic before any code is written.</div>
+      </div>
+      <div class="tier-card tier-2">
+        <div class="tier-label">Continuous</div>
+        <div class="tier-title">Internal QA & API Testing</div>
+        <div class="tier-desc">We rigorously load-test the FastAPI backend and verify that the Flutter mobile apps render perfectly and function seamlessly across a wide matrix of modern iOS and Android device screen sizes.</div>
+      </div>
+      <div class="tier-card tier-3">
+        <div class="tier-label">Sprints 10-11</div>
+        <div class="tier-title">User Acceptance Testing (UAT)</div>
+        <div class="tier-desc">Stable beta builds are deployed via Apple TestFlight and Google Play. Stakeholders and selected users run real-world tests—from placing a UK order to simulating a Bissau delivery drop-off.</div>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top: 60px;">
+      <h2><span class="sec-num">09</span> Go-To-Market Strategy</h2>
+    </div>
+    
+    <div class="wrapper-560">
+      <div class="gtm-list">
+        <div class="gtm-row">
+          <div class="gtm-circle">1</div>
+          <div class="gtm-content">
+            <div class="gtm-label">Phase 1: Validation</div>
+            <div class="gtm-title">UK Pilot Deployment</div>
+            <p class="gtm-desc">Initial rollout limited to the United Kingdom-to-Bissau delivery corridor. User research and controlled beta tests identify early adopters within the diaspora community. Local Bissau fulfilment handles hybrid stock provisioning.</p>
+          </div>
+        </div>
+        
+        <div class="gtm-row">
+          <div class="gtm-circle">2</div>
+          <div class="gtm-content">
+            <div class="gtm-label">Phase 2: Scale</div>
+            <div class="gtm-title">Public Store Rollout</div>
+            <p class="gtm-desc">Apple App Store and Google Play Store public submission. Marketing focuses on app acquisition via high-trust community referrals, pushing beyond initial beta cohorts.</p>
+          </div>
+        </div>
+
+        <div class="gtm-row">
+          <div class="gtm-circle">3</div>
+          <div class="gtm-content">
+            <div class="gtm-label">Phase 3: Expansion</div>
+            <div class="gtm-title">Multi-Country Corridors</div>
+            <p class="gtm-desc">Expanding operations into other Portuguese-speaking regions (Angola, Mozambique, Cape Verde, São Tomé) and activating multi-currency payment support to grow the sender base globally.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="table-wrapper-680">
+      <table>
+        <thead>
+          <tr>
+            <th>Channel</th>
+            <th>Audience</th>
+            <th>Targeting & Messaging</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Community Beta</td>
+            <td>UK Expats</td>
+            <td>Word-of-mouth validation focusing on "Guaranteed Physical Goods".</td>
+          </tr>
+          <tr>
+            <td>WhatsApp Networks</td>
+            <td>Recipients</td>
+            <td>Encouraging family members to request using the 'Copy & Share' link.</td>
+          </tr>
+          <tr>
+            <td>Diaspora Outreach</td>
+            <td>Sender Community</td>
+            <td>Leveraging informal market intelligence via structured research interviews.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="pg-footer">
+    <div class="logo-horizontal">
+      <img src="https://nexeor.com/img/logo/nexeor-logo.png" alt="Nexeor Icon">
+      <span>NEXEOR</span>
+    </div>
+    <div class="pg-footer-text">Nexeor · Custom Software Development · Dubai, UAE<br>Ref: NK-2026-03</div>
+  </div>
+  <div class="page-break"></div>
+
+  <div class="page">
+    <div class="section-header">
+      <h2><span class="sec-num">10</span> Cost Breakdown</h2>
+    </div>
+    <p><strong>Fixed-Price Investment</strong></p>
+    <p>This proposal represents a fixed-price commitment of $13,624 USD for Phases 1 & 2. This comprehensive fee covers UX/UI design, full-stack development of all four applications, backend infrastructure setup, QA/UAT support, app store fees, and deployment. By fixing the cost, we absorb the risk of development overruns, allowing you to budget with absolute certainty.</p>
+    
+    <div class="wrapper-560">
+      <table>
+        <thead>
+          <tr>
+            <th>Module</th>
+            <th>Scope</th>
+            <th>Cost (USD)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>UI/UX Design</td>
+            <td>High-fidelity Figma designs, prototypes & user flows</td>
+            <td>$1,300</td>
+          </tr>
+          <tr>
+            <td>Customer App</td>
+            <td>iOS + Android Flutter build</td>
+            <td>$3,000</td>
+          </tr>
+          <tr>
+            <td>Agent & Recipient Apps</td>
+            <td>Flutter (Lightweight + Offline mode)</td>
+            <td>$2,800</td>
+          </tr>
+          <tr>
+            <td>Operations Console</td>
+            <td>Next.js dashboard & management</td>
+            <td>$2,500</td>
+          </tr>
+          <tr>
+            <td>Backend & Infra</td>
+            <td>FastAPI, PostgreSQL, Stripe, Notifications</td>
+            <td>$2,400</td>
+          </tr>
+          <tr>
+            <td>QA, Design Testing & UAT</td>
+            <td>Internal testing, beta builds, & TestFlight/Google Play releases</td>
+            <td>$1,500</td>
+          </tr>
+          <tr>
+            <td>App Store Registration</td>
+            <td>Apple Developer ($99) & Google Play ($25) Fees</td>
+            <td>$124</td>
+          </tr>
+          <tr class="total-row">
+            <td colspan="2">Total Fixed Price (Phase 1 & 2 Investment)</td>
+            <td>$13,624</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-header" style="margin-top: 60px;">
+      <h2><span class="sec-num">11</span> Payment Schedule</h2>
+    </div>
+    <p>All payments are milestone-based — no payment is due until the corresponding milestone is completed and confirmed by both parties. Payments due within 5 business days of milestone confirmation.</p>
+    
+    <div class="wrapper-560">
+      <table>
+        <thead>
+          <tr>
+            <th>Milestone</th>
+            <th>Trigger</th>
+            <th>% of Total</th>
+            <th>Amount (USD)</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>M1</td>
+            <td>Contract Signed</td>
+            <td>10%</td>
+            <td>$1,362.40</td>
+          </tr>
+          <tr>
+            <td>M2</td>
+            <td>Design & Research Approved</td>
+            <td>20%</td>
+            <td>$2,724.80</td>
+          </tr>
+          <tr>
+            <td>M3</td>
+            <td>Customer App UAT Ready</td>
+            <td>10%</td>
+            <td>$1,362.40</td>
+          </tr>
+          <tr>
+            <td>M4</td>
+            <td>Recipient App UAT Ready</td>
+            <td>10%</td>
+            <td>$1,362.40</td>
+          </tr>
+          <tr>
+            <td>M5</td>
+            <td>Agent App UAT Ready</td>
+            <td>10%</td>
+            <td>$1,362.40</td>
+          </tr>
+          <tr>
+            <td>M6</td>
+            <td>Console UAT Ready</td>
+            <td>10%</td>
+            <td>$1,362.40</td>
+          </tr>
+          <tr>
+            <td>M7</td>
+            <td>UAT Complete, Go-Live OK</td>
+            <td>20%</td>
+            <td>$2,724.80</td>
+          </tr>
+          <tr class="total-row">
+            <td>M8</td>
+            <td>Platform Go-Live</td>
+            <td>10%</td>
+            <td>$1,362.40</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <div class="pg-footer">
+    <div class="logo-horizontal">
+      <img src="https://nexeor.com/img/logo/nexeor-logo.png" alt="Nexeor Icon">
+      <span>NEXEOR</span>
+    </div>
+    <div class="pg-footer-text">Nexeor · Custom Software Development · Dubai, UAE<br>Ref: NK-2026-03</div>
+  </div>
+  <div class="page-break"></div>
+
+  <div class="page">
+    <div class="section-header">
+      <h2><span class="sec-num">12</span> Infrastructure & Communication Costs</h2>
+    </div>
+    <p>While the Phase 1 & 2 development cost is fixed, running the live platform incurs standard, usage-based monthly operational costs. We utilize Amazon Web Services (AWS) for secure communications, combined with Nexeor’s optimized scalable hosting environment.</p>
+
+    <div class="table-wrapper-680">
+      <table>
+        <thead>
+          <tr>
+            <th>Service Layer</th>
+            <th>Technology / Provider</th>
+            <th>Usage Detail & Scope</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><strong>Platform Hosting & DB</strong></td>
+            <td>Nexeor / AWS Hosting</td>
+            <td>Hosts the FastAPI backend, Next.js console, and PostgreSQL database. Billed dynamically based on server load and traffic.</td>
+          </tr>
+          <tr>
+            <td><strong>Transactional Email</strong></td>
+            <td>AWS SES</td>
+            <td>Order verification and receipts for both customers and internal company alerts. Baseline estimate: ~500 orders/month initially.</td>
+          </tr>
+          <tr>
+            <td><strong>SMS Gateway</strong></td>
+            <td>AWS SNS</td>
+            <td>Sent exclusively to UK Customers for critical events (OTP / Login verification & Order verification).</td>
+          </tr>
+          <tr>
+            <td><strong>Push Notifications</strong></td>
+            <td>Firebase Cloud Messaging</td>
+            <td>Free-tier push notifications utilized for real-time order tracking updates to minimize SMS transit costs.</td>
+          </tr>
+          <tr>
+            <td><strong>Media Storage</strong></td>
+            <td>AWS S3</td>
+            <td>Secure storage for 1 Proof of Delivery (POD) record per order containing geo-tags and product images.</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="section-header" style="margin-top: 60px;">
+      <h2><span class="sec-num">13</span> Assumptions & Out-of-Pocket Exclusions</h2>
+    </div>
+    <p>To ensure complete transparency regarding the boundaries of this engagement, the following items are expressly excluded from the fixed-price development fee and remain the responsibility of the Client:</p>
+    
+    <div class="wrapper-560">
+      <ul style="padding-left: 20px;">
+        <li style="margin-bottom: 12px;"><strong>Third-Party Infrastructure & API Fees:</strong> Monthly hosting costs (AWS / Nexeor usage), transactional email/SMS gateways (AWS SES/SNS), mapping services (Google Maps API for geo-tagging), and Stripe transaction processing fees.</li>
+        <li style="margin-bottom: 12px;"><strong>Legal & Regulatory Compliance:</strong> Nexeor acts solely as the technical provider. The Client is solely responsible for UK business registration, cross-border tax compliance, local Guinea-Bissau logistics or trade licensing, and the drafting of the platform's Terms of Service and Privacy Policy.</li>
+        <li style="margin-bottom: 12px;"><strong>Data Entry & Translation:</strong> The Client is responsible for providing the initial product catalogue data, pricing, and any required Portuguese/Creole text translations prior to Sprint 3.</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="pg-footer">
+    <div class="logo-horizontal">
+      <img src="https://nexeor.com/img/logo/nexeor-logo.png" alt="Nexeor Icon">
+      <span>NEXEOR</span>
+    </div>
+    <div class="pg-footer-text">Nexeor · Custom Software Development · Dubai, UAE<br>Ref: NK-2026-03</div>
+  </div>
+  <div class="page-break"></div>
+
+  <div class="page">
+    <div class="section-header">
+      <h2><span class="sec-num">14</span> Security, GDPR & Compliance</h2>
+    </div>
+    <p>Because Nha Kinhon targets a UK-based diaspora and handles financial transactions, the platform is engineered from day one to meet strict European and international compliance standards to build immediate user trust.</p>
+
+    <div class="tier-boxes">
+      <div class="tier-card tier-1">
+        <div class="tier-label">Compliance</div>
+        <div class="tier-title">GDPR by Design</div>
+        <div class="tier-desc">The architecture supports UK Data Protection Act (GDPR) requirements, incorporating data minimization principles and building in automated "Right to Erasure" (account and data deletion) workflows for end-users.</div>
+      </div>
+      <div class="tier-card tier-2">
+        <div class="tier-label">Payments</div>
+        <div class="tier-title">Financial Security (PCI-DSS)</div>
+        <div class="tier-desc">We utilize strict Stripe tokenization. Payment details are processed directly via Stripe’s secure iframe; credit card numbers never touch, pass through, or are stored on Nexeor’s backend servers or databases.</div>
+      </div>
+      <div class="tier-card tier-3">
+        <div class="tier-label">Data Storage</div>
+        <div class="tier-title">Data Encryption</div>
+        <div class="tier-desc">All data in transit between the mobile apps, web console, and the backend is encrypted via TLS/SSL. Sensitive user data and Proof of Delivery coordinates are encrypted at rest within the PostgreSQL database.</div>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top: 60px;">
+      <h2><span class="sec-num">15</span> Post-Launch Support & SLA</h2>
+    </div>
+    <p>Following the successful Go-Live and inclusive "Hypercare" period (Sprint 12), software requires ongoing maintenance to adapt to continuous iOS/Android ecosystem updates and ensure server stability.</p>
+    <p>To protect your investment, Nexeor offers an optional Service Level Agreement (SLA) Retainer, calculated at roughly 18% of the project build cost annually:</p>
+
+    <div class="table-wrapper-680">
+      <table>
+        <thead>
+          <tr>
+            <th>Service Area</th>
+            <th>Inclusions</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Proactive Maintenance</td>
+            <td>Routine updates to Flutter dependencies to prevent the apps from breaking when Apple or Google release major OS updates.</td>
+          </tr>
+          <tr>
+            <td>Uptime & Monitoring</td>
+            <td>24/7 automated monitoring of the FastAPI backend and database health.</td>
+          </tr>
+          <tr>
+            <td>Critical Bug Fixes</td>
+            <td>Priority resolution of any critical workflow-breaking bugs that emerge post-launch.</td>
+          </tr>
+          <tr>
+            <td>Data Backups</td>
+            <td>Automated weekly snapshots of the production database.</td>
+          </tr>
+          <tr class="total-row">
+            <td>Monthly Maintenance Retainer</td>
+            <td>$195 USD / month</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <blockquote>Note: The SLA covers maintenance and stability of the existing Phase 1 & 2 scope. The development of entirely new features or multi-country expansions will be scoped and billed as separate project phases.</blockquote>
+  </div>
+
+  <div class="pg-footer">
+    <div class="logo-horizontal">
+      <img src="https://nexeor.com/img/logo/nexeor-logo.png" alt="Nexeor Icon">
+      <span>NEXEOR</span>
+    </div>
+    <div class="pg-footer-text">Nexeor · Custom Software Development · Dubai, UAE<br>Ref: NK-2026-03</div>
+  </div>
+  <div class="page-break"></div>
+
+  <div class="page">
+    <div class="section-header">
+      <h2><span class="sec-num">16</span> Next Steps</h2>
+    </div>
+    <div class="wrapper-560">
+      <div class="next-step-list">
+        <div class="next-step-item">
+          <div class="next-step-num">1</div>
+          <h4>Review and Confirm Proposal</h4>
+          <p>Review and approve this document. Confirm the fixed price of $13,624 USD.</p>
+        </div>
+        <div class="next-step-item">
+          <div class="next-step-num">2</div>
+          <h4>Contract Execution</h4>
+          <p>Sign project contract / service agreement and issue Milestone 1 payment ($1,362.40) to initiate the project.</p>
+        </div>
+        <div class="next-step-item">
+          <div class="next-step-num">3</div>
+          <h4>Project Kickoff</h4>
+          <p>Begin Sprint 1 with the kickoff meeting, scope brief, and handover of the product catalogue data.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="section-header" style="margin-top: 60px;">
+      <h2>Agreement & Authorisation</h2>
+    </div>
+    <p>This proposal is our formal commitment to see this project through to a live, operational platform. By signing below, both parties agree to formalise the partnership and proceed to contract generation based on these scoped terms.</p>
+    
+    <div class="sign-grid">
+      <div>
+        <div class="sign-party-label">Service Provider</div>
+        <div class="logo-vertical">
+          <img src="https://nexeor.com/img/logo/nexeor-logo.png" alt="Nexeor Icon">
+          <span>Nexeor</span>
+        </div>
+        
+        <div class="sign-field" style="margin-top: 24px;">
+          <div class="sign-label">Authorised Signatory</div>
+        </div>
+        <div class="sign-field">
+          <div class="sign-label">Designation</div>
+        </div>
+        <div class="sign-field">
+          <div class="sign-label">Signature</div>
+        </div>
+        <div class="sign-field">
+          <div class="sign-label">Date</div>
+        </div>
+      </div>
+
+      <div>
+        <div class="sign-party-label">Client</div>
+        <div class="sign-party-name">Bissau Express / Nha Kinhon</div>
+        
+        <div class="sign-field" style="margin-top: 32px;">
+          <div class="sign-label">Authorised Signatory</div>
+        </div>
+        <div class="sign-field">
+          <div class="sign-label">Designation</div>
+        </div>
+        <div class="sign-field">
+          <div class="sign-label">Signature</div>
+        </div>
+        <div class="sign-field">
+          <div class="sign-label">Date</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sign-ref-bar">
+      Ref: NK-2026-03 &nbsp; | &nbsp; Date: March 2026 &nbsp; | &nbsp; Validity: 30 Days &nbsp; | &nbsp; Price: USD $13,624
+    </div>
+  </div>
+
+  <div class="pg-footer">
+    <div class="logo-horizontal">
+      <img src="https://nexeor.com/img/logo/nexeor-logo.png" alt="Nexeor Icon">
+      <span>NEXEOR</span>
+    </div>
+    <div class="pg-footer-text">Nexeor · Custom Software Development · Dubai, UAE<br>Ref: NK-2026-03</div>
+  </div>
+
+</body>
+</html>
